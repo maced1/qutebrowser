@@ -42,7 +42,7 @@ jobs:
           node-version: '22.x'
 
       - name: Install deps
-        run: npm i
+        run: npm install
 
       - name: Setup Python Measurment
         uses: green-coding-solutions/eco-ci-energy-estimation@v4 # use hash or @vX here (See note below)
