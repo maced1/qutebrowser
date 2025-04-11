@@ -67,8 +67,8 @@ jobs:
         task: display-results
       continue-on-error: true
 
-    - name: Upload Eco-CI Report
-      uses: actions/upload-artifact@v4
-      with:
-        name: eco-ci-report
-        path: eco-ci-report.json
+    # - name: Upload Eco-CI Report
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: eco-ci-report
+    #     path: eco-ci-report.json
