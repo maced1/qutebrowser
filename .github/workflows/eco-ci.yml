@@ -49,10 +49,12 @@ jobs:
         task: get-measurement
         label: 'dependency install'
       continue-on-error: true
-
+  
     - name: Run tests with tox in headless mode
       run: |
+        export QUTE_QT_WRAPPER=PyQt5
         dbus-run-session -- xvfb-run -a tox -e py
+
 
     - name: Get measurement - test run
       uses: green-coding-solutions/eco-ci-energy-estimation@v4
