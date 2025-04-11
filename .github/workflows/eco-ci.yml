@@ -54,8 +54,7 @@ jobs:
   
     - name: Run tests with tox in headless mode
       run: |
-        export QUTE_QT_WRAPPER=PyQt5
-        dbus-run-session -- xvfb-run -a tox -e py
+          dbus-run-session -- xvfb-run -a tox -e py
 
 
     - name: Get measurement - test run
