@@ -41,8 +41,30 @@ jobs:
         with:
           node-version: '22.x'
 
-      - name: Install deps
-        run: npm install
+      # - name: Install deps
+      #   run: npm install
+
+      - name: Install dependencies
+        run: |
+            [[ ${{ matrix.testenv }} == eslint ]] && npm install -g 'eslint@<9.0.0'
+            [[ ${{ matrix.testenv }} == docs ]] && sudo apt-get update && sudo apt-get install --no-install-recommends asciidoc libegl1
+            [[ ${{ matrix.testenv }} == vulture || ${{ matrix.testenv }} == pylint ]] && sudo apt-get update && sudo apt-get install --no-install-recommends libegl1
+            if [[ ${{ matrix.testenv }} == shellcheck ]]; then
+                scversion="stable"
+                bindir="$HOME/.local/bin"
+                mkdir -p "$bindir"
+                wget -qO- "https://github.com/koalaman/shellcheck/releases/download/$scversion/shellcheck-$scversion.linux.x86_64.tar.xz" | tar -xJv --strip-components 1 -C "$bindir" shellcheck-$scversion/shellcheck
+                echo "$bindir" >> "$GITHUB_PATH"
+            fi
+            if [[ ${{ matrix.testenv }} == actionlint ]]; then
+                bindir="$HOME/.local/bin"
+                mkdir -p "$bindir"
+                wget -q https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash
+                bash download-actionlint.bash latest "$bindir"
+                echo "$bindir" >> "$GITHUB_PATH"
+            fi
+            python -m pip install -U pip
+            python -m pip install -U -r misc/requirements/requirements-tox.txt
 
       - name: Setup Python Measurment
         uses: green-coding-solutions/eco-ci-energy-estimation@v4 # use hash or @vX here (See note below)
