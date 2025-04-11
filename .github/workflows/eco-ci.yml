@@ -4,10 +4,10 @@ run-name: Eco-CI on Qutebrowser
 on:
   push:
     branches:
-      - feature/eco-ci
+      - feature/set-eco-ci
   pull_request:
     branches:
-      - feature/eco-ci
+      - feature/set-eco-ci
 
 permissions:
   contents: read
