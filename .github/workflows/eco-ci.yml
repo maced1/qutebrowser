@@ -16,7 +16,7 @@ jobs:
   run-tests:
     runs-on: ubuntu-22.04  # Prefer 22.04 for Qt testing compatibility
     env:
-      QUTE_QT_WRAPPER: PyQt
+      QUTE_QT_WRAPPER: PyQt5
 
     steps:
     - name: Start Eco-CI Measurement
@@ -44,6 +44,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         python -m pip install -r misc/requirements/requirements-tox.txt
+        python -m pip install PyQt5
 
     - name: Measure Dependency Install Energy
       uses: green-coding-solutions/eco-ci-energy-estimation@v4
@@ -66,9 +67,9 @@ jobs:
       with:
         task: display-results
 
-    - name: Upload Eco-CI Report
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: eco-ci-report
-        path: eco-ci-report.json
+    # - name: Upload Eco-CI Report
+    #   if: always()
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: eco-ci-report
+    #     path: eco-ci-report.json
