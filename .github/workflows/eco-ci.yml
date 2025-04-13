@@ -14,64 +14,61 @@ permissions:
 
 jobs:
   run-tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04  # Prefer 22.04 for Qt testing compatibility
     env:
       QUTE_QT_WRAPPER: PyQt
 
     steps:
-    - name: Start Measurement
+    - name: Start Eco-CI Measurement
       uses: green-coding-solutions/eco-ci-energy-estimation@v4
       with:
         task: start-measurement
 
-    - name: Checkout repository
+    - name: Checkout Repository
       uses: actions/checkout@v4
 
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.11'  # Match .python-version or tox envs
+        python-version: '3.11'
 
-    - name: Install system dependencies for Qt testing
+    - name: Install System Dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install --no-install-recommends \
+        sudo apt-get install --no-install-recommends -y \
           libegl1 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 \
           libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 \
           libxcb-shape0 libxcb-cursor0 libjpeg-dev xvfb dbus
 
-    - name: Install Python dependencies
+    - name: Install Python Dependencies
       run: |
         python -m pip install --upgrade pip
         python -m pip install -r misc/requirements/requirements-tox.txt
 
-    - name: Get measurement - dependency install
+    - name: Measure Dependency Install Energy
       uses: green-coding-solutions/eco-ci-energy-estimation@v4
       with:
         task: get-measurement
         label: 'dependency install'
-      continue-on-error: true
-  
-    - name: Run tests with tox in headless mode
+
+    - name: Run Tests with Tox
       run: |
-          dbus-run-session -- xvfb-run -a tox -e py
+        dbus-run-session -- xvfb-run -a tox -e py
 
-
-    - name: Get measurement - test run
+    - name: Measure Test Run Energy
       uses: green-coding-solutions/eco-ci-energy-estimation@v4
       with:
         task: get-measurement
         label: 'tox -e py'
-      continue-on-error: true
 
-    - name: Display energy results
+    - name: Display Energy Results
       uses: green-coding-solutions/eco-ci-energy-estimation@v4
       with:
         task: display-results
-      continue-on-error: true
 
-    # - name: Upload Eco-CI Report
-    #   uses: actions/upload-artifact@v4
-    #   with:
-    #     name: eco-ci-report
-    #     path: eco-ci-report.json
+    - name: Upload Eco-CI Report
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: eco-ci-report
+        path: eco-ci-report.json
